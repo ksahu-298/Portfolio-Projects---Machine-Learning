@@ -83,7 +83,6 @@ jupyter notebook
 | Accuracy | 0.9 |
 | Confusion Matrix | _—_ |
 
-> ✏️ Fill in your actual test accuracy and confusion matrix values.
 
 <br/>
 
