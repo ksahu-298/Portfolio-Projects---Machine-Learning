@@ -20,7 +20,7 @@ Part of the [**Portfolio Projects - Machine Learning**](../) repository.
 
 | # | Notebook | Concept Covered |
 |---|---|---|
-| 1 | `01_simple_linear_regression.ipynb` | Single-feature regression, line of best fit, OLS |
+| 1 | `Placement-Project-Logistic Regression` | Single-feature regression, line of best fit, OLS |
 | 2 | `02_multiple_linear_regression.ipynb` | Multi-feature regression, coefficients & interpretation |
 | 3 | `03_polynomial_regression.ipynb` | Non-linear relationships via polynomial features |
 | 4 | `04_gradient_descent.ipynb` | Cost function optimization, learning rate tuning |
