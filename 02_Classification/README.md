@@ -17,7 +17,7 @@ Part of the [**Portfolio Projects - Machine Learning**](../) repository.
 
 | # | Notebook | Concept Covered |
 |---|---|---|
-| 1 | `01_email_spam_classifier.ipynb` | Text preprocessing, TF-IDF, Naive Bayes for binary classification |
+| 1 | `01_sms_spam_classifier.ipynb` | Text preprocessing, TF-IDF, Naive Bayes for binary classification |
 | 2 | `02_logistic_regression.ipynb` | Sigmoid function, decision boundary, log loss |
 | 3 | `03_knn_classifier.ipynb` | Distance metrics, choosing k, curse of dimensionality |
 | 4 | `04_decision_tree_classifier.ipynb` | Entropy, Gini impurity, tree pruning |
