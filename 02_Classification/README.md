@@ -1,192 +1,97 @@
 <div align="center">
+<img src="https://img.shields.io/badge/Module-02_Classification-6B8F71?style=for-the-badge" />
+<img src="https://img.shields.io/badge/status-in_progress-87A96B?style=flat-square" />
+<img src="https://img.shields.io/badge/part_of-Portfolio_Projects--Machine_Learning-4A5D45?style=flat-square" />
+</div>
+<br/>
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:06b6d4,100:9333ea&height=200&section=header&text=Email/SMS%20Spam%20Classifier&fontSize=42&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=A%20Binary%20Text%20Classification%20Project&descAlignY=55&descSize=18" width="100%"/>
+# 🧮 Classification
 
-<a href="https://git.io/typing-svg">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&color=9333EA&center=true&vCenter=true&width=550&lines=Classifying+Spam+vs+Ham+with+NLP;TF-IDF+%2B+Naive+Bayes+Pipeline;Precision-Focused+Evaluation" alt="Typing SVG" />
-</a>
+This module covers classification algorithms — predicting discrete class labels from input features. Each notebook builds on the last, moving from simple binary classifiers to probabilistic, margin-based, and ensemble approaches.
+
+Part of the [**Portfolio Projects - Machine Learning**](../) repository.
 
 <br/>
 
-![Python](https://img.shields.io/badge/Python-3.10+-06b6d4?style=for-the-badge&logo=python&logoColor=white)
-![scikit-learn](https://img.shields.io/badge/scikit--learn-ML-9333ea?style=for-the-badge&logo=scikitlearn&logoColor=white)
-![NLTK](https://img.shields.io/badge/NLTK-NLP-06b6d4?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-In%20Progress-9333ea?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-06b6d4?style=for-the-badge)
+## 📂 Contents
 
-</div>
+| # | Notebook | Concept Covered |
+|---|---|---|
+| 1 | `01_email_spam_classifier.ipynb` | Text preprocessing, TF-IDF, Naive Bayes for binary classification |
+| 2 | `02_logistic_regression.ipynb` | Sigmoid function, decision boundary, log loss |
+| 3 | `03_knn_classifier.ipynb` | Distance metrics, choosing k, curse of dimensionality |
+| 4 | `04_decision_tree_classifier.ipynb` | Entropy, Gini impurity, tree pruning |
+| 5 | `05_svm_classifier.ipynb` | Margin maximization, kernel trick |
+| 6 | `06_naive_bayes.ipynb` | Bayes' theorem, conditional independence assumption |
+| 7 | `07_evaluation_metrics.ipynb` | Confusion matrix, precision, recall, F1, ROC-AUC |
 
----
+> ✏️ Rename/reorder the rows above to match your actual notebook filenames.
 
-## 📌 Overview
+<br/>
 
-This project builds a **binary text classifier** that labels an incoming SMS/email message as **Spam** or **Ham (Not Spam)**. Unlike regression tasks that predict continuous values, this is a **classification problem** — the model outputs a discrete category, and the entire pipeline (features, loss function, and evaluation metrics) is built around that distinction.
+## 🧠 Key Concepts
 
-The project follows the standard applied-NLP workflow: clean raw text → engineer features → vectorize → train multiple classifiers → select the best one by **precision**, not just accuracy (a false positive here means a real message gets buried in spam).
+- **Decision Boundaries** — linear vs non-linear separation of classes
+- **Probabilistic vs Discriminative Models** — Naive Bayes/Logistic Regression vs SVM/Decision Trees
+- **Class Imbalance** — why accuracy alone is misleading, and how precision/recall/F1 correct for it
+- **Confusion Matrix** — true/false positives & negatives, and their real-world cost tradeoffs
+- **Bias-Variance Tradeoff** — underfitting vs overfitting in classifiers (e.g. tree depth, k in KNN)
+- **Feature Engineering for Text** — Bag of Words, TF-IDF, stemming/lemmatization
 
----
-
-## 🎯 Problem Statement
-
-> Given the raw text of a message, predict whether it is **Spam (1)** or **Ham (0)**.
-
-| Aspect | Detail |
-|---|---|
-| Task type | Binary Classification |
-| Input | Raw message text (string) |
-| Output | Label — `Spam` / `Ham` |
-| Primary metric | **Precision** (minimize false positives) |
-| Secondary metrics | Accuracy, Recall, F1-score, Confusion Matrix |
-
----
-
-## 🗂️ Dataset
-
-- **Source:** [SMS Spam Collection Dataset (UCI / Kaggle)](https://archive.ics.uci.edu/dataset/228/sms+spam+collection)
-- **Size:** ~5,500 labeled messages
-- **Columns:** `label` (spam/ham), `message` (raw text)
-- **Class distribution:** Imbalanced — roughly 87% ham / 13% spam, which is why accuracy alone is a misleading metric here
-
----
+<br/>
 
 ## 🛠️ Tech Stack
 
-| Category | Tools |
-|---|---|
-| Language | Python 3.10+ |
-| Data Handling | Pandas, NumPy |
-| NLP / Preprocessing | NLTK (stopwords, stemming), `re`, `string` |
-| Feature Extraction | Bag of Words, TF-IDF (`CountVectorizer`, `TfidfVectorizer`) |
-| Modeling | Scikit-learn (Naive Bayes, Logistic Regression, SVM, Random Forest) |
-| Visualization | Matplotlib, Seaborn, WordCloud |
-| Environment | Jupyter Notebook |
-
----
-
-## 🔄 Project Pipeline
-
-```
-Raw Data
-   │
-   ▼
-1. Data Cleaning        → remove duplicates, nulls, irrelevant columns
-   │
-   ▼
-2. EDA                  → class balance, message length, word frequency, WordClouds
-   │
-   ▼
-3. Text Preprocessing    → lowercase → tokenize → remove stopwords/punctuation → stemming
-   │
-   ▼
-4. Feature Extraction    → Bag of Words vs TF-IDF comparison
-   │
-   ▼
-5. Model Building        → train & compare multiple classifiers
-   │
-   ▼
-6. Evaluation            → precision-first comparison, confusion matrix
-   │
-   ▼
-7. Model Selection        → pick best precision/accuracy tradeoff
-   │
-   ▼
-8. Deployment (optional)  → Streamlit app for live predictions
-```
-
----
-
-## 🤖 Models Compared
-
-| Model | Accuracy | Precision | Notes |
-|---|---|---|---|
-| Multinomial Naive Bayes | _TBD_ | _TBD_ | Classic baseline for text/word-count data |
-| Logistic Regression | _TBD_ | _TBD_ | Strong linear baseline |
-| Support Vector Machine (SVM) | _TBD_ | _TBD_ | Often competitive on sparse TF-IDF vectors |
-| Random Forest | _TBD_ | _TBD_ | Ensemble comparison |
-
-> Fill this table in once your notebook runs — precision is the tie-breaker, since a legitimate message misclassified as spam is the costlier error.
-
----
-
-## 📊 Results
-
-_(To be added after training — include final confusion matrix, precision/recall/F1, and the chosen model with justification.)_
-
----
-
-## ⚙️ Installation & Usage
-
-```bash
-# Clone the repository
-git clone https://github.com/ksahu-298/<repo-name>.git
-cd <repo-name>
-
-# Create a virtual environment (optional but recommended)
-python -m venv venv
-source venv/bin/activate   # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run the notebook
-jupyter notebook spam_classifier.ipynb
-```
-
-### Predict on a custom message
-
-```python
-import pickle
-
-tfidf = pickle.load(open('vectorizer.pkl', 'rb'))
-model = pickle.load(open('model.pkl', 'rb'))
-
-message = ["Congratulations! You've won a free prize, click here to claim now."]
-vector = tfidf.transform(message)
-prediction = model.predict(vector)
-
-print("Spam" if prediction[0] == 1 else "Ham")
-```
-
----
-
-## 📁 Project Structure
-
-```
-├── data/
-│   └── spam.csv
-├── notebooks/
-│   └── spam_classifier.ipynb
-├── model.pkl
-├── vectorizer.pkl
-├── requirements.txt
-└── README.md
-```
-
----
-
-## 🚀 Future Improvements
-
-- [ ] Deploy as a Streamlit web app for live message checking
-- [ ] Try word embeddings (Word2Vec/GloVe) instead of TF-IDF
-- [ ] Experiment with a lightweight transformer (DistilBERT) for comparison
-- [ ] Add a Flask/FastAPI backend for API-based predictions
-
----
-
-## 🙏 Acknowledgements
-
-- Dataset: UCI Machine Learning Repository — SMS Spam Collection
-- Project structure inspired by CampusX's *100 Days of Machine Learning* series
-
----
-
 <div align="center">
 
-### 👤 Author
+![Python](https://img.shields.io/badge/Python-4A5D45?style=for-the-badge&logo=python&logoColor=white)
+![NumPy](https://img.shields.io/badge/NumPy-6B8F71?style=for-the-badge&logo=numpy&logoColor=white)
+![Pandas](https://img.shields.io/badge/Pandas-87A96B?style=for-the-badge&logo=pandas&logoColor=white)
+![scikit--learn](https://img.shields.io/badge/scikit--learn-4A5D45?style=for-the-badge&logo=scikitlearn&logoColor=white)
+![NLTK](https://img.shields.io/badge/NLTK-6B8F71?style=for-the-badge&logo=python&logoColor=white)
+![Matplotlib](https://img.shields.io/badge/Matplotlib-87A96B?style=for-the-badge&logo=plotly&logoColor=white)
 
-**Karan Sahu**
-[![GitHub](https://img.shields.io/badge/GitHub-ksahu--298-06b6d4?style=for-the-badge&logo=github)](https://github.com/ksahu-298)
+</div>
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:9333ea,100:06b6d4&height=100&section=footer" width="100%"/>
+<br/>
 
+## 🚀 How to Run
+
+```bash
+# From the repo root
+cd 02_Classification
+
+# Install dependencies (if not already installed at repo root)
+pip install numpy pandas scikit-learn nltk matplotlib jupyter
+
+# Launch notebooks
+jupyter notebook
+```
+
+<br/>
+
+## 📊 Results Summary
+
+| Model | Dataset | Accuracy | Precision | Recall | F1 Score |
+|---|---|---|---|---|---|
+| Email Spam Classifier (Naive Bayes) | _dataset name_ | _—_ | _—_ | _—_ | _—_ |
+| Logistic Regression | _dataset name_ | _—_ | _—_ | _—_ | _—_ |
+| KNN Classifier | _dataset name_ | _—_ | _—_ | _—_ | _—_ |
+| Decision Tree | _dataset name_ | _—_ | _—_ | _—_ | _—_ |
+| SVM | _dataset name_ | _—_ | _—_ | _—_ | _—_ |
+
+> ✏️ Fill in your actual scores once notebooks are finalized — this table is the fastest way for a reviewer to judge your results without opening every notebook. For imbalanced datasets (like spam detection), lead with precision/F1 over raw accuracy.
+
+<br/>
+
+## 📌 Notes
+
+- Datasets used are sourced from [add source, e.g. Kaggle / UCI ML Repository / sklearn built-in datasets]
+- Each notebook includes EDA, preprocessing, model training, and evaluation sections
+- Text-based notebooks (e.g. spam classifier) include an additional NLP preprocessing stage: lowercasing → tokenization → stopword removal → stemming → vectorization
+
+<br/>
+
+<div align="center">
+<i>⬅️ Back to <a href="../">Portfolio Projects - Machine Learning</a></i>
 </div>
