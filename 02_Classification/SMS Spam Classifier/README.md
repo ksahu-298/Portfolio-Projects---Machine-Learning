@@ -1,6 +1,6 @@
 <div align="center">
 <img src="https://img.shields.io/badge/Project-SMS_Spam_Classifier-6B8F71?style=for-the-badge" />
-<img src="https://img.shields.io/badge/status-in_progress-87A96B?style=flat-square" />
+<img src="https://img.shields.io/badge/status-complete-87A96B?style=flat-square" />
 <img src="https://img.shields.io/badge/part_of-02_Classification-4A5D45?style=flat-square" />
 </div>
 <br/>
@@ -30,48 +30,49 @@ Part of the [**02_Classification**](../) module in [**Portfolio Projects - Machi
 ## 🗂️ Dataset
 
 - **Source:** [SMS Spam Collection Dataset (UCI / Kaggle)](https://archive.ics.uci.edu/dataset/228/sms+spam+collection)
-- **Size:** ~5,500 labeled messages
-- **Columns:** `label` (spam/ham), `message` (raw text)
-- **Class distribution:** Imbalanced — roughly 87% ham / 13% spam, which is why accuracy alone is misleading here
+- **Size:** 5,572 raw messages → 5,169 after removing duplicates
+- **Columns:** `v1` (ham/spam label), `v2` (raw text) — renamed to `target` (label-encoded) and `text` during cleaning
+- **Class distribution:** Imbalanced — 4,516 ham vs 653 spam (~87.4% ham / 12.6% spam), which is why accuracy alone is misleading here
 
 <br/>
 
 ## 🧠 Key Concepts
 
-- **Text Preprocessing** — lowercasing, tokenization, stopword removal, stemming
-- **Feature Extraction** — Bag of Words vs TF-IDF, and why sparse vectors work well here
+- **Text Preprocessing** — lowercasing, tokenization, stopword + punctuation removal, Porter stemming
+- **Feature Extraction** — Bag of Words vs TF-IDF (`max_features=3000`), and why sparse vectors work well here
 - **Naive Bayes Assumption** — conditional independence between words, why it still performs well on text
 - **Class Imbalance** — why precision/F1 matter more than raw accuracy for this dataset
 - **Confusion Matrix** — the real-world cost of a false positive (real message flagged as spam) vs a false negative (spam that gets through)
+- **Ensembling** — Voting and Stacking classifiers to squeeze out extra precision over any single model
 
 <br/>
 
 ## 🔄 Pipeline
 
 ```
-Raw Data
+Raw Data (spam.csv, 5,572 rows)
    │
    ▼
-1. Data Cleaning        → remove duplicates, nulls, irrelevant columns
+1. Data Cleaning        → dropped unnamed columns, renamed v1/v2 → target/text,
+   │                        label-encoded target, removed 403 duplicate rows (5,169 left)
+   ▼
+2. EDA                  → class balance, message length/word/sentence stats,
+   │                        pairplot + correlation heatmap, WordClouds, top-30 word frequency
+   ▼
+3. Text Preprocessing   → lowercase → tokenize → remove stopwords/punctuation → Porter stemming
    │
    ▼
-2. EDA                  → class balance, message length, word frequency, WordClouds
+4. Feature Extraction   → TF-IDF (max_features=3000) chosen over Bag of Words
    │
    ▼
-3. Text Preprocessing   → lowercase → tokenize → remove stopwords/punctuation → stemming
+5. Model Building       → trained & compared 11 classifiers (NB variants, SVM, LR, KNN, DT,
+   │                        RF, AdaBoost, Bagging, Extra Trees, GBDT, XGBoost)
+   ▼
+6. Evaluation           → precision-first comparison, confusion matrix per model
    │
    ▼
-4. Feature Extraction   → Bag of Words vs TF-IDF comparison
-   │
-   ▼
-5. Model Building       → train & compare multiple classifiers
-   │
-   ▼
-6. Evaluation           → precision-first comparison, confusion matrix
-   │
-   ▼
-7. Model Selection      → pick best precision/accuracy tradeoff
-   │
+7. Model Selection      → Soft Voting Classifier (SVM + MultinomialNB + Extra Trees) —
+   │                        best accuracy/precision tradeoff; Stacking also tested
    ▼
 8. Deployment (optional) → Streamlit app for live predictions
 ```
@@ -87,7 +88,9 @@ Raw Data
 ![Pandas](https://img.shields.io/badge/Pandas-87A96B?style=for-the-badge&logo=pandas&logoColor=white)
 ![scikit--learn](https://img.shields.io/badge/scikit--learn-4A5D45?style=for-the-badge&logo=scikitlearn&logoColor=white)
 ![NLTK](https://img.shields.io/badge/NLTK-6B8F71?style=for-the-badge&logo=python&logoColor=white)
+![XGBoost](https://img.shields.io/badge/XGBoost-4A5D45?style=for-the-badge&logo=xgboost&logoColor=white)
 ![Matplotlib](https://img.shields.io/badge/Matplotlib-87A96B?style=for-the-badge&logo=plotly&logoColor=white)
+![Seaborn](https://img.shields.io/badge/Seaborn-6B8F71?style=for-the-badge&logo=python&logoColor=white)
 
 </div>
 
@@ -100,10 +103,10 @@ Raw Data
 cd 02_Classification/SMS-Spam-Classifier
 
 # Install dependencies (if not already installed at repo root)
-pip install numpy pandas scikit-learn nltk matplotlib jupyter
+pip install numpy pandas scikit-learn nltk xgboost matplotlib seaborn wordcloud jupyter
 
 # Launch notebook
-jupyter notebook
+jupyter notebook model.ipynb
 ```
 
 ### Predict on a custom message
@@ -125,14 +128,25 @@ print("Spam" if prediction[0] == 1 else "Ham")
 
 ## 📊 Results Summary
 
-| Model | Accuracy | Precision | Recall | F1 Score |
-|---|---|---|---|---|
-| Multinomial Naive Bayes | _—_ | _—_ | _—_ | _—_ |
-| Logistic Regression | _—_ | _—_ | _—_ | _—_ |
-| Support Vector Machine (SVM) | _—_ | _—_ | _—_ | _—_ |
-| Random Forest | _—_ | _—_ | _—_ | _—_ |
+TF-IDF (3,000 features) + 80/20 train-test split, evaluated on 1,034 held-out messages:
 
-> ✏️ Fill in your actual scores once the notebook is finalized. Precision is the tie-breaker for this project — a real message misclassified as spam is the costlier mistake.
+| Model | Accuracy | Precision |
+|---|---|---|
+| **Voting Classifier (SVM + NB + ExtraTrees, soft)** | **98.16%** | **98.37%** |
+| Extra Trees Classifier | 97.78% | 98.32% |
+| SVM (sigmoid kernel) | 97.78% | 97.52% |
+| Stacking Classifier (SVM + NB + ExtraTrees → RF) | 97.97% | 93.98% |
+| Random Forest | 97.29% | 97.41% |
+| Multinomial Naive Bayes | 97.20% | 100.00% |
+| XGBoost | 96.81% | 95.65% |
+| K-Nearest Neighbors | 90.52% | 100.00% |
+| Logistic Regression | 95.65% | 96.97% |
+| Bagging Classifier | 95.65% | 86.61% |
+| Gradient Boosting | 94.78% | 92.00% |
+| AdaBoost | 92.17% | 82.02% |
+| Decision Tree | 92.75% | 82.47% |
+
+> **Chosen model: Soft Voting Classifier** (SVM + Multinomial NB + Extra Trees). Multinomial NB and KNN hit 100% precision but at the cost of recall/accuracy — with a mostly-ham dataset, a model that's too eager to predict "ham" inflates precision trivially. The voting ensemble gives the best precision without sacrificing accuracy, which fits the "minimize false positives, but still actually catch spam" goal.
 
 <br/>
 
@@ -140,12 +154,8 @@ print("Spam" if prediction[0] == 1 else "Ham")
 
 ```
 SMS-Spam-Classifier/
-├── data/
-│   └── spam.csv
-├── sms_spam_classifier.ipynb
-├── model.pkl
-├── vectorizer.pkl
-├── requirements.txt
+├── spam.csv
+├── model.ipynb
 └── README.md
 ```
 
@@ -153,18 +163,20 @@ SMS-Spam-Classifier/
 
 ## 🚀 Future Improvements
 
+- [ ] Pickle the final vectorizer + voting classifier (`vectorizer.pkl`, `model.pkl`) for reuse outside the notebook
 - [ ] Deploy as a Streamlit web app for live message checking
 - [ ] Try word embeddings (Word2Vec/GloVe) instead of TF-IDF
 - [ ] Experiment with a lightweight transformer (DistilBERT) for comparison
 - [ ] Add a Flask/FastAPI backend for API-based predictions
+- [ ] Re-run the max_features sweep for TF-IDF (only 3,000 was tested end-to-end)
 
 <br/>
 
 ## 📌 Notes
 
-- Dataset used is the SMS Spam Collection Dataset — [add exact source link once finalized]
-- Notebook includes EDA, preprocessing, model training, and evaluation sections
-- Precision is prioritized over accuracy throughout due to class imbalance
+- Dataset used is the SMS Spam Collection Dataset (UCI / Kaggle), loaded from `spam.csv` with `latin-1` encoding
+- Notebook (`model.ipynb`) covers data cleaning, EDA, text preprocessing, feature extraction, model training/comparison, and voting/stacking ensembles
+- Precision is prioritized over accuracy throughout due to class imbalance, but the final model was picked on precision *and* accuracy together — not precision alone
 
 <br/>
 
